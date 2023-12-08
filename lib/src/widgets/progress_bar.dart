@@ -77,7 +77,7 @@ class ProgressBar extends StatefulWidget {
     required this.total,
     this.alignment = ProgressBarAlignment.center,
     this.barCapShape = BarCapShape.square,
-    this.progressBarIndicator = const RoundedRectangularProgressBarIndicator(),
+    this.progressBarIndicator = const OnlyShowTimeBarIndicator(),
     this.collapsedBarHeight = 5.0,
     this.collapsedThumbRadius = 8.0,
     this.expandedBarHeight = 7.0,
@@ -100,6 +100,7 @@ class ProgressBar extends StatefulWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.semanticsFormatter,
+    this.progressChangeWithDrag = false
   })  : assert(expandedBarHeight >= collapsedBarHeight),
         assert(expandedThumbRadius >= collapsedThumbRadius);
 
@@ -265,6 +266,9 @@ class ProgressBar extends StatefulWidget {
   /// currently selected value is with more context.
   final SemanticsFormatter? semanticsFormatter;
 
+
+  final bool progressChangeWithDrag;
+
   @override
   State<ProgressBar> createState() => ProgressBarState();
 }
@@ -326,6 +330,7 @@ class ProgressBarState extends State<ProgressBar> {
         lerpColorsTransition: widget.lerpColorsTransition,
         showBufferedWhenCollapsed: widget.showBufferedWhenCollapsed,
         automaticallyHandleAnimations: widget.automaticallyHandleAnimations,
+        progressChangeWithDrag: widget.progressChangeWithDrag,
         progressBarState: this,
         onSeek: widget.onSeek,
         onChanged: (position) {

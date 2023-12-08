@@ -40,6 +40,7 @@ class RenderProgressBar extends RenderBox {
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
+    this.progressChangeWithDrag = false,
     SemanticsFormatter? semanticsFormatter,
   })  : _controller = controller,
         _progress = progress,
@@ -90,6 +91,7 @@ class RenderProgressBar extends RenderBox {
   late Offset _position = Offset.zero;
   late double _effectiveThumbRadius;
   late double _effectiveBarHeight;
+  bool progressChangeWithDrag = false;
 
   static const double _minPreferredHeight = 24.0;
 
@@ -354,8 +356,11 @@ class RenderProgressBar extends RenderBox {
 
   void _onUpdateHorizontalRecognizer(DragUpdateDetails details) {
     _position = _clampPositionBySize(details.localPosition);
-
-    onChanged?.call(_positionToDuration(_position.dx));
+    var position = _positionToDuration(_position.dx);
+    if (progressChangeWithDrag) {
+      _progress = position;
+    }
+    onChanged?.call(position);
 
     markNeedsPaint();
   }
@@ -431,7 +436,8 @@ class RenderProgressBar extends RenderBox {
   @override
   Size computeDryLayout(BoxConstraints constraints) {
     final Size desiredSize = _computeDesiredSize();
-    return constraints.constrain(desiredSize);
+    var s = constraints.constrain(desiredSize);
+    return s;
   }
 
   void _computeEffectiveSizes() {
@@ -516,7 +522,7 @@ class RenderProgressBar extends RenderBox {
   RRect _barRRect({required double width}) {
     final Rect rect = Rect.fromLTWH(
       0.0,
-      _position.dy - (_effectiveBarHeight / 2),
+      size.height - _effectiveBarHeight,
       width,
       _effectiveBarHeight,
     );
@@ -572,7 +578,8 @@ class RenderProgressBar extends RenderBox {
       _effectiveThumbRadius,
       size.width - _effectiveThumbRadius,
     );
-    final Offset center = Offset(dx, _position.dy) + offset;
+    final Offset center =
+        Offset(dx, size.height - _effectiveBarHeight / 2) + offset;
 
     final Path path = Path()
       ..addOval(

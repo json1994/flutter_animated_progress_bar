@@ -37,6 +37,7 @@ class RenderProgressBarWidget extends LeafRenderObjectWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.semanticsFormatter,
+    this.progressChangeWithDrag = false
   });
 
   final ProgressBarController controller;
@@ -69,7 +70,7 @@ class RenderProgressBarWidget extends LeafRenderObjectWidget {
   final ValueChanged<Duration>? onChangeStart;
   final ValueChanged<Duration>? onChangeEnd;
   final SemanticsFormatter? semanticsFormatter;
-
+  final bool progressChangeWithDrag;
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderProgressBar(
@@ -105,6 +106,7 @@ class RenderProgressBarWidget extends LeafRenderObjectWidget {
       onChangeStart: onChangeStart,
       onChangeEnd: onChangeEnd,
       semanticsFormatter: semanticsFormatter,
+      progressChangeWithDrag: progressChangeWithDrag
     );
   }
 
@@ -140,6 +142,7 @@ class RenderProgressBarWidget extends LeafRenderObjectWidget {
       ..lerpColorsTransition = lerpColorsTransition
       ..showBufferedWhenCollapsed = showBufferedWhenCollapsed
       ..automaticallyHandleAnimations = automaticallyHandleAnimations
+      ..progressChangeWithDrag = progressChangeWithDrag
       ..semanticsFormatter = semanticsFormatter;
   }
 }

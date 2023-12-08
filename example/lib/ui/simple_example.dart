@@ -40,7 +40,7 @@ class _SimpleExampleState extends State<SimpleExample>
     return Scaffold(
       appBar: AppBar(title: const Text('Simple example')),
       body: Center(
-        child: ProgressBar(
+        child: DecoratedBox(decoration: const BoxDecoration(color: Colors.white),child: ProgressBar(
           controller: _controller,
           progress: const Duration(seconds: 30),
           buffered: const Duration(seconds: 45),
@@ -50,8 +50,9 @@ class _SimpleExampleState extends State<SimpleExample>
           collapsedThumbRadius: 10.0,
           expandedThumbRadius: 14.0,
           thumbGlowRadius: 32.0,
+          progressChangeWithDrag: true,
           onSeek: (value) {},
-        ),
+        ),),
       ),
     );
   }

@@ -169,6 +169,44 @@ class RoundedRectangularProgressBarIndicator extends ProgressBarIndicator {
   }
 }
 
+class OnlyShowTimeBarIndicator extends ProgressBarIndicator {
+  const OnlyShowTimeBarIndicator({this.durationFormatter, this.style, this.textColor = Colors.white});
+
+  final DurationFormatter? durationFormatter;
+  final TextStyle? style;
+  final Color? textColor;
+  @override
+  void paint(PaintingContext context,
+      {required ProgressBarController controller,
+      required Size size,
+      required Offset position,
+      required double thumbRadius,
+      required double barHeight,
+      required Duration progress,
+      required Duration total,
+      required TextPainter textPainter}) {
+    final Duration thumbProgress = Duration(
+      microseconds: ((position.dx / size.width) * total.inMicroseconds).round(),
+    );
+
+    textPainter
+      ..text = TextSpan(
+        text: durationFormatter?.call(thumbProgress) ??
+            Formatters.formatDuration(thumbProgress),
+        style: (style ?? const TextStyle(fontSize: 12.0, height: 1.0))
+            .copyWith(color: textColor?.withOpacity(controller.barValue)),
+      )
+      ..textDirection = TextDirection.ltr
+      ..layout();
+    final Canvas canvas = context.canvas;
+    canvas.save();
+    // canvas.transform(scaleTransformation.storage);
+
+    textPainter.paint(canvas, Offset(size.width / 2 - textPainter.width / 2, -40));
+    canvas.restore();
+  }
+}
+
 /// A indicator that resembles a circular tooltip.
 class CircularProgressBarIndicator extends ProgressBarIndicator {
   /// Create a indicator that resembles a circular tooltip.
