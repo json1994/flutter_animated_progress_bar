@@ -170,7 +170,8 @@ class RoundedRectangularProgressBarIndicator extends ProgressBarIndicator {
 }
 
 class OnlyShowTimeBarIndicator extends ProgressBarIndicator {
-  const OnlyShowTimeBarIndicator({this.durationFormatter, this.style, this.textColor = Colors.white});
+  const OnlyShowTimeBarIndicator(
+      {this.durationFormatter, this.style, this.textColor = Colors.white});
 
   final DurationFormatter? durationFormatter;
   final TextStyle? style;
@@ -191,18 +192,27 @@ class OnlyShowTimeBarIndicator extends ProgressBarIndicator {
 
     textPainter
       ..text = TextSpan(
-        text: durationFormatter?.call(thumbProgress) ??
-            Formatters.formatDuration(thumbProgress),
-        style: (style ?? const TextStyle(fontSize: 12.0, height: 1.0))
-            .copyWith(color: textColor?.withOpacity(controller.barValue)),
-      )
+          text: durationFormatter?.call(thumbProgress) ??
+              Formatters.formatDuration(thumbProgress),
+          style: (style ?? const TextStyle(fontSize: 18.0, height: 1.0))
+              .copyWith(color: textColor?.withOpacity(controller.barValue)),
+          children: [
+            TextSpan(
+                text:
+                    " / ${durationFormatter?.call(total) ?? Formatters.formatDuration(total)}",
+                style: (style ?? const TextStyle(fontSize: 18.0, height: 1.0))
+                    .copyWith(
+                        color: const Color(0xfff0f0f0)
+                            .withOpacity(controller.barValue)))
+          ])
       ..textDirection = TextDirection.ltr
       ..layout();
     final Canvas canvas = context.canvas;
     canvas.save();
     // canvas.transform(scaleTransformation.storage);
 
-    textPainter.paint(canvas, Offset(size.width / 2 - textPainter.width / 2, -40));
+    textPainter.paint(
+        canvas, Offset(size.width / 2 - textPainter.width / 2, -40));
     canvas.restore();
   }
 }
